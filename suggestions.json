@@ -1,0 +1,213 @@
+{
+  "web_suggestions": {
+    "enum_subdomains": {
+      "enabled": true,
+      "suggestions": [
+        "Check for wildcard DNS records",
+        "Look for internal subdomains (staging, dev, test)",
+        "Check for forgotten/decommissioned subdomains",
+        "Verify subdomains against CVE databases",
+        "Map subdomain IPs for fingerprinting"
+      ],
+      "next_steps": ["bust_directories", "identify_tech"]
+    },
+    "bust_directories": {
+      "enabled": true,
+      "suggestions": [
+        "Check /admin, /dashboard, /wp-admin panels",
+        "Look for /api endpoints",
+        "Check /backup, /old directories for old files",
+        "Look for configuration files: /config, /conf.php",
+        "Check /upload, /files directories for file upload",
+        "Search for version control: /.git, /.svn",
+        "Look for sensitive files in /docs, /readme"
+      ],
+      "owasp_mapping": "A01_Broken_Access_Control, A05_Security_Misconfiguration"
+    },
+    "bust_files": {
+      "enabled": true,
+      "suggestions": [
+        "Search for backup files (.bak, .old, .tar, .zip)",
+        "Look for config files (.conf, .config, .xml, .json)",
+        "Check for database files (.sql, .db, .sqlite)",
+        "Search for credentials (.env, .pem, .key)",
+        "Look for sensitive documents (.pdf, .doc, .xlsx)"
+      ],
+      "owasp_mapping": "A02_Cryptographic_Failures, A05_Security_Misconfiguration"
+    },
+    "identify_tech": {
+      "enabled": true,
+      "suggestions": [
+        "Identify CMS and check known vulnerabilities",
+        "Check framework versions in CVE databases",
+        "Look for outdated libraries and components",
+        "Check SSL/TLS certificate information",
+        "Search for technology-specific exploits"
+      ],
+      "owasp_mapping": "A06_Vulnerable_Components"
+    },
+    "search_vulns": {
+      "enabled": false,
+      "suggestions": [
+        "Search ExploitDB for known exploits",
+        "Check NIST NVD for CVE information",
+        "Look for POCs on GitHub",
+        "Check for 0-day vulnerabilities",
+        "Review CVSS scores and impact"
+      ],
+      "owasp_mapping": "Multiple"
+    }
+  },
+  "os_suggestions": {
+    "scan_ports": {
+      "enabled": true,
+      "suggestions": [
+        "Focus on common ports: 22 (SSH), 80 (HTTP), 443 (HTTPS), 3306 (MySQL)",
+        "Check for high ports: 8080, 8443, 9200 (Elasticsearch)",
+        "Verify RDP (3389) and SMB (445) exposure",
+        "Look for database ports: 5432 (PostgreSQL), 27017 (MongoDB)",
+        "Check for management interfaces: 9000 (Docker), 5984 (CouchDB)"
+      ],
+      "owasp_mapping": "A05_Security_Misconfiguration"
+    },
+    "full_scan": {
+      "enabled": false,
+      "suggestions": [
+        "Use only if you have authorization and time",
+        "Can take 1-2 hours depending on network speed",
+        "May trigger IDS/IPS alerts",
+        "Look for services on non-standard ports",
+        "Helpful for finding hidden services"
+      ]
+    },
+    "identify_os": {
+      "enabled": true,
+      "suggestions": [
+        "Windows: Check for SMB (445), RDP (3389), WinRM (5985)",
+        "Linux: Look for SSH (22), services like Apache/Nginx",
+        "macOS: SSH typically available, check for unique services",
+        "Note OS version from banners and responses",
+        "Check for custom/specialized OS (ICS, IoT, routers)"
+      ],
+      "nist_mapping": "SI (System and Information Integrity)"
+    },
+    "search_vulns": {
+      "enabled": true,
+      "suggestions": [
+        "Check for known service vulnerabilities",
+        "Search for OS-specific exploits",
+        "Look for privilege escalation vectors",
+        "Check for default credentials",
+        "Review CVSS scores for critical issues"
+      ],
+      "nist_mapping": "AC (Access Control), SC (System Communications Protection)"
+    }
+  },
+  "owasp_top_10_checks": {
+    "A01_Broken_Access_Control": {
+      "web_checks": ["Directory listing", "Access to admin panels", "Unauthorized file access"],
+      "os_checks": ["Weak permissions", "Exposed management interfaces", "Default credentials"]
+    },
+    "A02_Cryptographic_Failures": {
+      "web_checks": ["Unencrypted sensitive data", "Weak SSL/TLS", "Hardcoded credentials"],
+      "os_checks": ["Weak encryption", "Unencrypted protocols (FTP, HTTP)", "Exposed keys"]
+    },
+    "A03_Injection": {
+      "web_checks": ["SQL injection points", "Command injection", "LDAP injection"],
+      "os_checks": ["Shell command injection", "Database injection", "OS command execution"]
+    },
+    "A04_Insecure_Design": {
+      "web_checks": ["Missing rate limiting", "No CSRF protection", "Weak authentication"],
+      "os_checks": ["Weak security architecture", "No segmentation", "Poor access controls"]
+    },
+    "A05_Security_Misconfiguration": {
+      "web_checks": ["Debug mode enabled", "Default credentials", "Unnecessary services"],
+      "os_checks": ["Unnecessary open ports", "Default passwords", "Weak SSH settings"]
+    },
+    "A06_Vulnerable_Components": {
+      "web_checks": ["Outdated frameworks", "Vulnerable libraries", "Known CVEs"],
+      "os_checks": ["Outdated OS", "Unpatched software", "Known vulnerabilities"]
+    },
+    "A07_Authentication_Failures": {
+      "web_checks": ["Weak password policy", "No MFA", "Session management issues"],
+      "os_checks": ["Weak authentication", "No MFA", "Brute force possible"]
+    },
+    "A08_Data_Integrity_Failures": {
+      "web_checks": ["No data validation", "Insecure deserialization", "Replay attacks"],
+      "os_checks": ["No integrity checks", "Unsigned code execution", "Tampering possible"]
+    },
+    "A09_Logging_Monitoring_Failures": {
+      "web_checks": ["No logging", "Log tampering possible", "No monitoring"],
+      "os_checks": ["No audit logging", "No monitoring", "Log deletion possible"]
+    },
+    "A10_SSRF": {
+      "web_checks": ["No input validation", "Unrestricted requests", "SSRF possible"],
+      "os_checks": ["Network unrestricted", "Internal service exposure", "Lateral movement possible"]
+    }
+  },
+  "nist_sp_800_53_mapping": {
+    "AC_Access_Control": {
+      "web_checks": ["Verify authentication", "Check authorization", "Test access controls"],
+      "os_checks": ["Verify user permissions", "Check group policies", "Test file permissions"]
+    },
+    "AU_Audit_Accountability": {
+      "web_checks": ["Check access logs", "Verify logging", "Review audit trails"],
+      "os_checks": ["Check system logs", "Verify audit logging", "Review event logs"]
+    },
+    "IA_Identification_Authentication": {
+      "web_checks": ["Test authentication bypass", "Check password policy", "Verify MFA"],
+      "os_checks": ["Test authentication", "Check password strength", "Verify MFA"]
+    },
+    "SC_System_Communications_Protection": {
+      "web_checks": ["Verify SSL/TLS", "Check encryption", "Test data protection"],
+      "os_checks": ["Verify encryption", "Check protocols", "Test data protection"]
+    },
+    "SI_System_Information_Integrity": {
+      "web_checks": ["Check for malware", "Verify patching", "Test integrity"],
+      "os_checks": ["Check for malware", "Verify patches", "Test integrity"]
+    }
+  },
+  "quick_checklist": {
+    "pre_engagement": [
+      "Verify authorization and scope",
+      "Confirm testing dates and times",
+      "Get emergency contacts",
+      "Review NDA and contracts"
+    ],
+    "reconnaissance": [
+      "Passive information gathering",
+      "Domain registration information",
+      "DNS records and mail servers",
+      "Public source code repositories",
+      "Employee information from LinkedIn"
+    ],
+    "scanning": [
+      "Active vulnerability scanning",
+      "Port scanning",
+      "Service enumeration",
+      "Web application scanning",
+      "Technology identification"
+    ],
+    "enumeration": [
+      "Directory and file discovery",
+      "User enumeration",
+      "Share enumeration",
+      "API endpoint discovery",
+      "Subdomain enumeration"
+    ],
+    "exploitation": [
+      "Test identified vulnerabilities",
+      "Verify exploitability",
+      "Document impact",
+      "Take screenshots",
+      "Maintain audit trail"
+    ],
+    "reporting": [
+      "Compile findings",
+      "Assign severity ratings",
+      "Provide remediation guidance",
+      "Create executive summary",
+      "Schedule debrief meeting"
+    ]
+  }
+}
